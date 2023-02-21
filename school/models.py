@@ -1,6 +1,8 @@
 from django.db import models
 from django.utils.text import slugify
 
+from users.models import User
+
 NULLABLE = {'blank': True, 'null': True}
 
 
@@ -35,3 +37,29 @@ class Lesson(models.Model):
         if not self.slug:
             self.slug = slugify(self.name)
         super().save(*args, **kwargs)
+
+
+class Payment(models.Model):
+    CASH = 'cash'
+    TRANSFER = 'trans'
+
+    PAYMENT_CHOICES = [
+        (CASH, 'наличные'),
+        (TRANSFER, 'перевод')
+    ]
+
+    user = models.ForeignKey(User, **NULLABLE, on_delete=models.CASCADE, verbose_name='пользователь')
+    date = models.DateField(auto_now_add=True, verbose_name='дата оплаты')
+    course = models.ForeignKey(Course, **NULLABLE, on_delete=models.CASCADE, verbose_name='оплаченный курс')
+    lesson = models.ForeignKey(Lesson, **NULLABLE, on_delete=models.CASCADE, verbose_name='оплаченный урок')
+    amount = models.PositiveIntegerField(verbose_name='сумма оплаты')
+    method_of_payment = models.CharField(max_length=5, choices=PAYMENT_CHOICES, default=CASH, verbose_name='способ оплаты')
+
+    class Meta:
+        verbose_name = 'Платеж'
+        verbose_name_plural = 'Платежи'
+
+    def __str__(self):
+        if self.course:
+            return f'{self.user} - {self.date} - {self.course}'
+        return f'{self.user} - {self.date} - {self.lesson}'
