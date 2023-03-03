@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 from django.utils.text import slugify
 
@@ -10,6 +11,7 @@ class Course(models.Model):
     name = models.CharField(max_length=250, verbose_name='название')
     preview = models.ImageField(upload_to='courses/', **NULLABLE, verbose_name='превью')
     description = models.CharField(max_length=500, verbose_name='описание')
+    author = models.ForeignKey(User, **NULLABLE, on_delete=models.CASCADE, verbose_name='автор')
 
     class Meta:
         verbose_name = 'Курс'
@@ -25,6 +27,7 @@ class Lesson(models.Model):
     description = models.CharField(max_length=500, verbose_name='описание')
     slug = models.SlugField(max_length=50,  **NULLABLE, verbose_name='ссылка на урок')
     course = models.ForeignKey(Course, **NULLABLE, on_delete=models.CASCADE, verbose_name='курс')
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, **NULLABLE, on_delete=models.CASCADE, verbose_name='автор')
 
     class Meta:
         verbose_name = 'Урок'
