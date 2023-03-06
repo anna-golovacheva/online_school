@@ -12,7 +12,8 @@ class UserCreateAPIView(generics.CreateAPIView):
 
 class UserRetrieveAPIView(generics.RetrieveAPIView):
     serializer_class = UserSerializer
-    queryset = Profile.objects.all()
+    queryset = User.objects.all()
+    lookup_field = 'pk'
 
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -26,3 +27,4 @@ class UserRetrieveAPIView(generics.RetrieveAPIView):
 class UserUpdateAPIView(generics.UpdateAPIView):
     serializer_class = UserSerializer
     queryset = User.objects.all()
+
