@@ -2,7 +2,7 @@ from django.contrib.auth.hashers import make_password
 from rest_framework import serializers
 
 from school.models import Payment
-from users.models import User, Profile
+from users.models import User
 
 
 class PaymentSerializer(serializers.ModelSerializer):
@@ -27,7 +27,6 @@ class UserSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         payment_data = validated_data.pop('payment_set')
         user = User.objects.create(**validated_data)
-        Profile.objects.create(user=user, **validated_data)
 
         for payment in payment_data:
             Payment.objects.create(user=user, **payment)
@@ -36,8 +35,6 @@ class UserSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         user = super().update(instance, validated_data)
-        profile = Profile.objects.get(user=user.pk)
-        super().update(profile, validated_data)
         return user
 
     class Meta:
@@ -56,7 +53,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Profile
+        model = User
         fields = (
             'first_name'
             'email',

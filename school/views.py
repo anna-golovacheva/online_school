@@ -1,10 +1,9 @@
-from django.shortcuts import render, get_object_or_404
 from rest_framework import viewsets, generics
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
-from rest_framework.response import Response
+from rest_framework.permissions import IsAdminUser
 
-from school.models import Course, Lesson
-from school.serializers import CourseSerializer, LessonSerializer
+
+from school.models import Course, Lesson, Subscription
+from school.serializers import CourseSerializer, LessonSerializer, SubscriptionSerializer
 from school.permissions import UserChangeLessonPermissionManager, UserChangeCoursePermissionManager, \
     UserRetrieveCoursePermissionManager, UserRetrieveLessonPermissionManager
 
@@ -52,3 +51,15 @@ class LessonUpdateAPIView(generics.UpdateAPIView):
     serializer_class = LessonSerializer
     queryset = Lesson.objects.all()
     lookup_field = 'slug'
+
+
+class SubscriptionCreateAPIView(generics.CreateAPIView):
+    permission_classes = [IsAdminUser]
+    serializer_class = SubscriptionSerializer
+    queryset = Subscription.objects.all()
+
+
+class SubscriptionDestroyAPIView(generics.DestroyAPIView):
+    permission_classes = [IsAdminUser]
+    serializer_class = SubscriptionSerializer
+    queryset = Subscription.objects.all()

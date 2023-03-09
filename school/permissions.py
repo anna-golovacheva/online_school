@@ -3,7 +3,7 @@ from rest_framework import permissions
 
 class UserChangeLessonPermissionManager(permissions.BasePermission):
     def has_permission(self, request, view):
-        if request.user.groups.filter(permissions__codename='change_lesson'):
+        if request.user.is_superuser or request.user.groups.filter(permissions__codename='change_lesson'):
             return True
         elif request.user == view.get_object().author:
             return True
@@ -12,7 +12,7 @@ class UserChangeLessonPermissionManager(permissions.BasePermission):
 
 class UserRetrieveLessonPermissionManager(permissions.BasePermission):
     def has_permission(self, request, view):
-        if request.user.groups.filter(permissions__codename='view_lesson'):
+        if request.user.is_superuser or request.user.groups.filter(permissions__codename='view_lesson'):
             return True
         elif request.user == view.get_object().author:
             return True
@@ -21,7 +21,7 @@ class UserRetrieveLessonPermissionManager(permissions.BasePermission):
 
 class UserChangeCoursePermissionManager(permissions.BasePermission):
     def has_permission(self, request, view):
-        if request.user.groups.filter(permissions__codename='change_course'):
+        if request.user.is_superuser or request.user.groups.filter(permissions__codename='change_course'):
             return True
         elif request.user == view.get_object().author:
             return True
@@ -30,7 +30,7 @@ class UserChangeCoursePermissionManager(permissions.BasePermission):
 
 class UserRetrieveCoursePermissionManager(permissions.BasePermission):
     def has_permission(self, request, view):
-        if request.user.groups.filter(permissions__codename='view_course'):
+        if request.user.is_superuser or request.user.groups.filter(permissions__codename='view_course'):
             return True
         elif request.user == view.get_object().author:
             return True

@@ -44,12 +44,3 @@ class User(AbstractUser):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
     objects = CustomUserManager()
-
-
-class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True, verbose_name='пользователь')
-    first_name = models.CharField(max_length=20, verbose_name='имя', **NULLABLE)
-    email = models.EmailField(unique=True, verbose_name='почта', **NULLABLE)
-    avatar = models.ImageField(upload_to='users/', **NULLABLE, verbose_name='аватар')
-    phone = models.CharField(max_length=25, **NULLABLE, verbose_name='номер телефона')
-    city = models.CharField(max_length=50, **NULLABLE, verbose_name='город')
