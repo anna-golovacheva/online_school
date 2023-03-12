@@ -1,3 +1,5 @@
+from abc import ABC
+
 from rest_framework import serializers
 from rest_framework.fields import CurrentUserDefault
 
@@ -70,3 +72,9 @@ class SubscriptionSerializer(serializers.ModelSerializer):
             'user',
             'course'
         )
+
+
+# class PaymentSerializer(serializers.Serializer, ABC):
+#     terminal_key = serializers.CharField(max_length=20, default='1677659270153DEMO')
+#     amount = serializers.IntegerField()
+#     order_id = serializers.IntegerField()

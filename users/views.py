@@ -22,11 +22,10 @@ class UserRetrieveAPIView(generics.RetrieveAPIView):
             serializer = UserSerializer
         else:
             serializer = ProfileSerializer
-        return Response(serializer.data)
+        return Response(serializer(instance).data)
 
 
 class UserUpdateAPIView(generics.UpdateAPIView):
     serializer_class = UserSerializer
     queryset = User.objects.all()
     permission_classes = [UserChangeUserPermissionManager]
-

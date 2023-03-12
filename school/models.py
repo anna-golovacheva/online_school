@@ -12,6 +12,7 @@ class Course(models.Model):
     preview = models.ImageField(upload_to='courses/', **NULLABLE, verbose_name='превью')
     description = models.CharField(max_length=500, verbose_name='описание')
     author = models.ForeignKey(settings.AUTH_USER_MODEL, **NULLABLE, on_delete=models.CASCADE, verbose_name='автор')
+    price = models.PositiveIntegerField(verbose_name='цена курса', default=500000)
 
     class Meta:
         verbose_name = 'Курс'
@@ -25,10 +26,11 @@ class Lesson(models.Model):
     name = models.CharField(max_length=250, verbose_name='название', unique=True)
     preview = models.ImageField(upload_to='lessons/', **NULLABLE, verbose_name='превью')
     description = models.CharField(max_length=500, verbose_name='описание')
-    slug = models.SlugField(max_length=50,  **NULLABLE, verbose_name='ссылка на урок')
+    slug = models.SlugField(max_length=50, unique=True, **NULLABLE, verbose_name='ссылка на урок')
     content = models.CharField(max_length=350, **NULLABLE, verbose_name='ссылка на материалы')
     course = models.ForeignKey(Course, **NULLABLE, on_delete=models.CASCADE, verbose_name='курс')
     author = models.ForeignKey(settings.AUTH_USER_MODEL, **NULLABLE, on_delete=models.CASCADE, verbose_name='автор')
+    price = models.PositiveIntegerField(verbose_name='цена урока', default=100000)
 
     class Meta:
         verbose_name = 'Урок'
@@ -53,11 +55,11 @@ class Payment(models.Model):
     ]
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, **NULLABLE, on_delete=models.CASCADE, verbose_name='пользователь')
-    date = models.DateField(auto_now_add=True, verbose_name='дата оплаты')
+    datetime = models.DateTimeField(auto_now_add=True, verbose_name='дата оплаты', **NULLABLE)
     course = models.ForeignKey(Course, **NULLABLE, on_delete=models.CASCADE, verbose_name='оплаченный курс')
-    lesson = models.ForeignKey(Lesson, **NULLABLE, on_delete=models.CASCADE, verbose_name='оплаченный урок')
+    lesson = models.ForeignKey(Lesson, **NULLABLE, to_field="slug", on_delete=models.CASCADE, verbose_name='оплаченный урок')
     amount = models.PositiveIntegerField(verbose_name='сумма оплаты')
-    method_of_payment = models.CharField(max_length=5, choices=PAYMENT_CHOICES, default=CASH, verbose_name='способ оплаты')
+    method_of_payment = models.CharField(max_length=5, choices=PAYMENT_CHOICES, default=TRANSFER, verbose_name='способ оплаты')
 
     class Meta:
         verbose_name = 'Платеж'
@@ -67,6 +69,17 @@ class Payment(models.Model):
         if self.course:
             return f'{self.user} - {self.date} - {self.course}'
         return f'{self.user} - {self.date} - {self.lesson}'
+
+
+class PaymentLog(models.Model):
+    payment = models.ForeignKey(Payment, on_delete=models.CASCADE, verbose_name='платеж')
+    success = models.BooleanField(verbose_name='успешность платежа')
+    error_code = models.CharField(max_length=10, verbose_name='код ошибки')
+    terminal_key = models.CharField(max_length=50, verbose_name='ключ терминала', **NULLABLE)
+    status = models.CharField(max_length=50, verbose_name='статус', **NULLABLE)
+    bank_payment_id = models.CharField(max_length=50, **NULLABLE, verbose_name='идентификатор платежа в системе банка')
+    amount = models.IntegerField(verbose_name='сумма', **NULLABLE)
+    payment_url = models.CharField(max_length=50, **NULLABLE, verbose_name='url для оплаты')
 
 
 class Subscription(models.Model):

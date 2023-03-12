@@ -33,10 +33,6 @@ class UserSerializer(serializers.ModelSerializer):
 
         return validated_data
 
-    def update(self, instance, validated_data):
-        user = super().update(instance, validated_data)
-        return user
-
     class Meta:
         model = User
         fields = (
@@ -55,7 +51,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
-            'first_name'
+            'first_name',
             'email',
             'avatar',
             'phone',

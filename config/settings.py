@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'drf_yasg',
     'rest_framework',
     'rest_framework_simplejwt',
     'corsheaders',
@@ -173,3 +174,5 @@ SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": datetime.timedelta(days=1),
     "REFRESH_TOKEN_LIFETIME": datetime.timedelta(days=2)
 }
+
+TERMINAL_KEY = '1677659270153DEMO'
