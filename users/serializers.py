@@ -10,7 +10,7 @@ class PaymentSerializer(serializers.ModelSerializer):
         model = Payment
         fields = (
             'user',
-            'date',
+            'datetime',
             'course',
             'lesson',
             'amount',
