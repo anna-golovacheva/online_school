@@ -67,8 +67,8 @@ class Payment(models.Model):
 
     def __str__(self):
         if self.course:
-            return f'{self.user} - {self.date} - {self.course}'
-        return f'{self.user} - {self.date} - {self.lesson}'
+            return f'{self.user} - {self.datetime} - {self.course}'
+        return f'{self.user} - {self.datetime} - {self.lesson}'
 
 
 class PaymentLog(models.Model):
